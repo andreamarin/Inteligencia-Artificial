@@ -1,0 +1,16 @@
+;; Invierte una lista anidada (a profundidad)
+
+;no redefine la lista
+(defun invertir(tree)
+(cond
+((null tree) tree)
+((atom (car tree))(append (invertir(cdr tree))(list (car tree))))
+(t (append (invertir(cdr tree))(list (invertir(car tree)))))))
+
+
+;redefine la lista
+(defun invierte (tree)
+(cond 
+((atom tree))
+(t (nreverse tree) (mapcar #'invierte tree))))
+

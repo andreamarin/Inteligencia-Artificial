@@ -1,0 +1,8 @@
+;; Obtener la altura del árbol
+
+(defun altura (tree)
+(cond 
+((null tree) 0)
+((atom (car tree)) 1)
+(t (max (+ 1 (altura (car tree))) (altura (cdr tree)))))
+
