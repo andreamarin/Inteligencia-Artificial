@@ -1,3 +1,13 @@
+;; TAREA 1
+
+;; Imprime un árbol por niveles (breath-first)
+(defun niveles(tree)
+(cond 
+((null tree))((atom (car tree))(prin1 (car tree))(niveles (cdr tree)))
+(t (print " ")(niveles (remove-if #'listp (car tree)))(print " ")(niveles (apply #'append (remove-if #'atom (car tree)))))))
+
+
+;; Invierte una lista a profundidad
 (defun invertir (tree)
 (cond 
 ((null tree))((atom (car tree))(invertir (cdr tree)))
