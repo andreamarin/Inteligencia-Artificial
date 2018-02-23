@@ -1,0 +1,12 @@
+(defun invertir (tree)
+(cond 
+((null tree))((atom (car tree))(invertir (cdr tree)))
+(t (rplaca tree (reverse (car tree))) (invertir (car tree)) (invertir (cdr tree)))))
+
+
+(defun invertir (tree)
+(cond
+((null tree))
+((atom (car tree)) () (invertir tree))
+(t (invertir (car tree)))
+
