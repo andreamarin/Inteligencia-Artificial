@@ -1,22 +1,48 @@
 ;; TAREA 1
 
-;; Imprime un árbol por niveles (breath-first)
+;; definir árbol
+(setf tree '(A (B (D E) C (F (G H)))))
+
+;; EJ 1. Da la altura del árbol
+(defun altura (tree)
+(cond 
+((null tree) 0)
+((atom (car tree)) 1)
+(t (max (+ 1 (altura (car tree))) (altura (cdr tree)))))
+
+;; EJ 2. Obtener el grado de un árbol (máximo número de hijos)
+(defun grado (tree)
+(cond
+((atom tree) 0)
+(t (apply #'max (count-if #'atom tree) (mapcar #'grado tree))))
+
+(grado tree)
+
+;; EJ 3. Imprime un árbol por niveles (breath-first)
 (defun niveles(tree)
-(cond 
-((null tree))((atom (car tree))(prin1 (car tree))(niveles (cdr tree)))
-(t (print " ")(niveles (remove-if #'listp (car tree)))(print " ")(niveles (apply #'append (remove-if #'atom (car tree)))))))
-
-
-;; Invierte una lista a profundidad
-(defun invertir (tree)
-(cond 
-((null tree))((atom (car tree))(invertir (cdr tree)))
-(t (rplaca tree (reverse (car tree))) (invertir (car tree)) (invertir (cdr tree)))))
-
-
-(defun invertir (tree)
 (cond
 ((null tree))
-((atom (car tree)) () (invertir tree))
-(t (invertir (car tree)))
+(t (print (remove-if #'listp tree))(niveles (apply #'append (remove-if #'atom tree))))))
+
+(niveles tree)
+
+;; EJ 4.Invierte una lista a profundidad
+
+;no redefine la lista
+(defun invertir(tree)
+(cond
+((null tree) tree)
+((atom (car tree))(append (invertir(cdr tree))(list (car tree))))
+(t (append (invertir(cdr tree))(list (invertir(car tree)))))))
+
+(invertir tree)
+
+;redefine la lista
+(defun invierte (tree)
+(cond 
+((atom tree))
+(t (nreverse tree) (mapcar #'invierte tree))))
+
+(invierte tree)
+(print tree)
 
