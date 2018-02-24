@@ -10,6 +10,8 @@
 ((atom (car tree)) 1)
 (t (max (+ 1 (altura (car tree))) (altura (cdr tree)))))
 
+(altura tree)
+
 ;; EJ 2. Obtener el grado de un árbol (máximo número de hijos)
 (defun grado (tree)
 (cond
@@ -20,9 +22,7 @@
 
 ;; EJ 3. Imprime un árbol por niveles (breath-first)
 (defun niveles(tree)
-(cond
-((null tree))
-(t (print (remove-if #'listp tree))(niveles (apply #'append (remove-if #'atom tree))))))
+(when (not (null tree))(print (remove-if #'listp tree))(niveles (apply #'append (remove-if #'atom tree)))))
 
 (niveles tree)
 
@@ -35,13 +35,14 @@
 ((atom (car tree))(append (invertir(cdr tree))(list (car tree))))
 (t (append (invertir(cdr tree))(list (invertir(car tree)))))))
 
+(defun invertir (tree)
+(if (atom tree) tree (mapcar #'invertir (reverse tree)))
+
 (invertir tree)
 
 ;redefine la lista
 (defun invierte (tree)
-(cond 
-((atom tree))
-(t (nreverse tree) (mapcar #'invierte tree))))
+(when (listp tree) (nreverse tree) (mapcar #'invierte tree))
 
 (invierte tree)
 (print tree)
