@@ -8,10 +8,12 @@
 (setf tree '(A (B (D (H(L M ) I(N O( T U)) J) E) C (F (K (P Q(S) R)) G))))
 
 ;; EJ 1. Da la altura del árbol
+(defun altura (tree)
 (cond 
-((null tree) 0)
-((atom (car tree)) 1 (altura (cdr tree)))
+((null tree) 1)
+((atom tree) 0)
 (t (max (+ 1 (altura (car tree))) (altura (cdr tree))))))
+
 
 (altura tree)
 
