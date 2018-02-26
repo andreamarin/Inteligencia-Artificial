@@ -10,7 +10,5 @@
 
 ;redefine la lista
 (defun invierte (tree)
-(cond 
-((atom tree))
-(t (nreverse tree) (mapcar #'invierte tree))))
+(when (listp tree) (nreverse tree) (mapcar #'invierte tree))
 
