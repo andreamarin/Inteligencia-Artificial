@@ -4,7 +4,7 @@
 ;; TAREA 1
 
 ;; definir árbol
-(setf tree '(A (B (D (H(L M ) I(N O( T U)) J) E) C (F (K (P Q(S) R)) G)))
+(setf tree '(A (B (D (H(L M ) I(N O( T U)) J) E) C (F (K (P Q(S) R)) G))))
 
 ;; EJ 1. Da la altura del árbol
 (defun altura (tree)
