@@ -1,9 +1,10 @@
 ;;Andrea Marín
 ;;158999
+
 ;; TAREA 1
 
 ;; definir árbol
-(setf tree '(A (B (D E) C (F (G H)))))
+(setf tree '(A (B (D (H(L M ) I(N O( T U)) J) E) C (F (K (P Q(S) R)) G)))
 
 ;; EJ 1. Da la altura del árbol
 (defun altura (tree)
@@ -36,9 +37,6 @@
 ((null tree) tree)
 ((atom (car tree))(append (invertir(cdr tree))(list (car tree))))
 (t (append (invertir(cdr tree))(list (invertir(car tree)))))))
-
-(defun invertir (tree)
-(if (atom tree) tree (mapcar #'invertir (reverse tree)))
 
 (invertir tree)
 
