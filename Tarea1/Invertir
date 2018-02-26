@@ -7,6 +7,9 @@
 ((atom (car tree))(append (invertir(cdr tree))(list (car tree))))
 (t (append (invertir(cdr tree))(list (invertir(car tree)))))))
 
+(defun invertir2 (tree)
+(if (atom tree) tree (mapcar #'invertir2 tree)))
+
 
 ;redefine la lista
 (defun invierte (tree)
