@@ -26,8 +26,26 @@
 
 (defun expand (n h)
   (loop for ls in (cdr (nth n neigh)) do 
-    (push (list (car ls) n (+ h (cadr ls)) (cadr (nth (car ls) dist))) abierto)
+    (when (null (position (car ls) cerrado))
+      (push (list (car ls) n (+ h (cadr ls)) (cadr (nth (car ls) dist))) abierto)
+    )
   )
 )
 
-;(defun next ()
+(defun next ()
+  (let ((n -1) (m 100000)) 
+    (loop for ls in abierto do 
+      (when (< (+ (cadddr ls) (caddr ls)) m)
+        (setq m (+ (cadddr ls) (caddr ls))) (setq n (car ls))
+      )
+    )
+  (list n m))
+)
+
+(defun run ()
+  (let ((n (car (next))) (h (cadr (next))))
+    (push n cerrado)
+    (setf abierto (remove n abierto :key 'first))
+    (expand n h)
+  )
+)
