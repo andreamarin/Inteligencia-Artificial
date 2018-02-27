@@ -1,53 +1,38 @@
-var input;
 var img;
-var data = [];
-var noIn = false;
+var coords;
+var conn;
+var moves;
 
-function preload() {
+function preload(){
+    coords = loadJSON('assets/data.json');
+    conn = loadJSON('assets/connect5.json');
     img = loadImage("assets/mexico.gif"); 
+    //moves = loadStrings('assets/out.txt');
 }
-
-
-function mouseClicked(){
-    fill(255,0,0);
-    if(noIn){
-        noIn = false
-    }
-    else{
-        ellipse(mouseX,mouseY,10,10);
-        s = input.value()+ ', ' + mouseX+ ', '+ mouseY
-        data.push(s);
-        print(s)
-    }
-}
-
-
 
 function setup() {
-    input = createInput();
-    input.position(20, 400);
     createCanvas(940, 700);
     image(img, 0, 0, 940, 700);
+    fill(0,255,255);
+    for(i in coords){
+        ellipse(coords[i][0],coords[i][1],10,10);
+    }
+    stroke(0)
+    for(i in conn){
+        for(j in conn[i]){
+            line(coords[i][0], coords[i][1], coords[j][0], coords[j][1])
+        }
+    }
     
-    createButton('save')
-    .position(20, 350)
-    .mousePressed(function() {
-    print('');
-    print('');
-    print('')
-    print(data);
-    noIn = true;
-});
-
-    createButton('undo')
-    .position(20, 375)
-    .mousePressed(function() {
-    print('deleting: ' + data.pop());
-    noIn = true;
-});
-
+    for(i in moves){
+        moves[i] = moves[i].split(',')
+    }
+    
+    stroke(255,0,0)
+    //line(coords[moves[1][0]][0], coords[moves[1][0]][1], coords[moves[1][0]][0])
+    
 }
 
 function draw() {
-  //print(mouseX)
+  //print(coords)
 }
