@@ -5,11 +5,30 @@
     ((= (car obj) (caar l)) l)
     (t (cons (car l) (abiertoInsert obj (cdr l))))
     )
-  )
+)
 
-(defun contorno(current node)
-  t
+(setq in (open "assets/coordenadas.txt")) ;; archivo con las coordenadas 
+(setq coordenadas (read-line in))
+(close in)
+
+(setq coordenadas (string-to-list coordenadas))
+
+(setq coor-end (car(nth end coordenadas)))
+
+(defun contorno(current node df)
+  (let (df1 (sqrt (+ (expt (- (second node) (car current)) 2) (expt (- (cadr node) (cadr current)) 2 )))) (df2 (sqrt (+ (expt (- (car node) (car coor-end))  2) (expt (- (cadr node) (cadr coor-end)) 2 )))) )
+  (<= (+ df1 df2) df) 
+)
+
+(defun expand(node)
+  (setq (c ( / (sqrt (+ (expt  (- (third node) (car coor-end)) 2) (expt (fourth node) (cadr coor-end))) 2) 2 )) (a (* (sqrt 2) c)))
+  (loop for ls in (cdr nth (car n) neigh) do
+	(let (coor (nth (car ls) coordenadas)))
+	(when (contorno (list (third node) (fourth node)) coor (* 2 a)) (setq (g (cadr ls)) (h  (+ (sixth node) (cadr (nth (car ls) dist)))) )  (abiertoInsert (list (car ls) (car node) (second coor) (caddr coor) g h (+ g h) ) abierto))
   )
+)
+
+
 
 (defun backtrackCerrado(son)
   (cond
