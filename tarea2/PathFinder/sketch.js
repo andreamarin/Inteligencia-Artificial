@@ -2,12 +2,13 @@ var img;
 var coords;
 var conn;
 var moves;
+var from;
 
 function preload(){
     coords = loadJSON('assets/data.json');
     conn = loadJSON('assets/connect5.json');
     img = loadImage("assets/mexico.gif"); 
-    //moves = loadStrings('assets/out.txt');
+    moves = loadJSON('assets/out.json');
 }
 
 function setup() {
@@ -24,15 +25,25 @@ function setup() {
         }
     }
     
-    for(i in moves){
-        moves[i] = moves[i].split(',')
-    }
+    //for(i in moves){
+    //    moves[i] = moves[i].split(',')
+    //}
     
-    stroke(255,0,0)
-    //line(coords[moves[1][0]][0], coords[moves[1][0]][1], coords[moves[1][0]][0])
+    stroke(0, 255, 0);
+    strokeWeight(3);
+    frameRate(1);
     
+    from = moves["start"];
+    print(moves)
+    //print(coords)
 }
 
 function draw() {
-  //print(coords)
+    var to = moves[from];
+    //print(from)
+    line(coords[from][0], coords[from][1], coords[to][0], coords[to][1]);
+    from = moves[from];
+    if(from == moves["end"]){
+        noLoop();
+    }
 }
