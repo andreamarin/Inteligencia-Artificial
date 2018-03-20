@@ -29,10 +29,11 @@
         (cond 
             ((find (car aux) cerrado :key #'car))
             (t
-            (setq node (find (car aux) dist :key #'car))
-            (push (car current) (cdr node))
-            (setq node (append node (list (cadr aux) (+ (car (last node)) (cadr aux)))))
-            (if (contorno node) (setq abierto (abiertoInsert node abierto)))
+                (setq node (find (car aux) dist :key #'car))
+                (push (car current) (cdr node))
+                (setq node (append node (list (+ (cadr aux) (sixth current)))))
+                (setq node (append node (list (+ (fifth node) (sixth node)))))
+                (if (contorno node) (setq abierto (abiertoInsert node abierto)))
             )
         )
     )
