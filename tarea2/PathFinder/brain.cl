@@ -20,9 +20,12 @@
 
 (setq in (open "assets/connections5.txt"))
 (setq neigh (read-line in))
-(close in)
+(close in )
 
 (setq neigh (car (string-to-list neigh)))
+
+(setq df 0)
+
 
 (defun expand (n h)
   (loop for ls in (cdr (nth n neigh)) do 
