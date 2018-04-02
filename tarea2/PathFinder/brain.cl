@@ -16,6 +16,8 @@
 (setq dist (read-line in nil))
 (close in)
 
+(setq start (car(string-to-list dist)))
+(setq end (car(string-to-list dist)))
 (setq dist (car(string-to-list dist)))
 
 (setq in (open "assets/connections5.txt"))
