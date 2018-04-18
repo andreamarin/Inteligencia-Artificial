@@ -1,10 +1,11 @@
-int[] depth = {2,6}; // red, blue
+
+int[] depth = {3,3}; // blue, red
+String[] names = {"BLUE", "HAL"}; // blue, red
+boolean pTurn = false; //blue starts
 int players = 0;
-boolean pTurn = true;
-//int play
 boolean numbering = true;
-String[] names = {"Hal", "Yek"}; // red, blue
-String path = "D:/Repos/Inteligencia-Artificial/Tarea3";
+String path = "/Users/alex/Documents/6Semestre/AI/Tarea3";
+
 
 // Colors: 
 /*
@@ -29,17 +30,21 @@ int[] C4 = {0, 155, 100}; //TILE_1
 int[] C5 = {230,230,50}; //CROWN
 
 
-/////////////////////////////////////////////////
 
-//import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 
 PShape crown;
 int[] board;
 int activePeg = -1;
+
+boolean twoPlayers = false;
+
 int selectedPeg = -1;
 int[][][] diagonals;
+Runtime rt = Runtime.getRuntime();
+String[] AImoves = {};
+int AIprog = 0;
 
 String[] AImoves = {};
 int AIprog = 0;
@@ -58,7 +63,7 @@ void drawBoard(){
     }
     rect(x*50,y*50,50,50);
     fill(0);
-    //textSize(8);
+
     if(numbering && (x+y)%2==1)
       text(str(i/2), x*50+2, y*50+8);
   }
@@ -157,7 +162,7 @@ int calcEatSimple(int pos){
   return 0;
 }
 
-void move(int from, int to, int[] board, boolean crown){  
+void move(int from, int to, int[] board, boolean crown){
   int p = board[from];
   board[from] = 0;
   board[to] = p;
@@ -204,7 +209,7 @@ int[] copyB(int[] board){
 }
 
 void mouseClicked(){
-  if(!gameOver() && (players == 1 && pTurn) || players == 2){
+  if(!gameOver() && ((players == 1 && pTurn) || players == 2)){
     int mini = 1000000;
     int ind = 0;
   
@@ -222,11 +227,7 @@ void mouseClicked(){
         ind = i;
       }
     }
-    //println("");
-    //println((pTurn?"Blue":"Red")+"'s trun");
-    //println("Clicked: "+ind);// +": " + calcEat(ind, board));
-    //println("Active: "+activePeg);
-    //println("Selected: "+selectedPeg);
+
     int[] canMove = canEat();
     int s=0;
     for(int i = 0; i<32; i++){
@@ -243,8 +244,7 @@ void mouseClicked(){
             println(selectedPeg+" to "+ind);
             move(selectedPeg, diag[0], board, false);
             move(diag[0], ind, board, false); // does nothing if not eating
-            //selectedPeg = diagonals[selectedPeg][i][m[i][1]];
-            //m = getMoves(ind);
+
             if(eats && calcEat(ind, board) != 0){
               println("Ate "+diag[0]);
               selectedPeg = ind;
@@ -253,9 +253,10 @@ void mouseClicked(){
             else{
               selectedPeg = -1;
               pTurn = !pTurn;
-              println("Turn ended.");
+
+              println("Turn ended.\n");
               if(players == 2){
-                println("/n"+names[pTurn?1:0]+"'s trun");
+                println(names[pTurn?0:1]+"'s turn");
               }
             }
             move(ind, ind, board, true); //convert to King
@@ -266,7 +267,7 @@ void mouseClicked(){
           }
         } 
       }else{
-        //println("can eat: "+s);
+
         if(pTurn ? board[ind]<0 : board[ind]>0){
           int[] m = getMoves(ind);
           boolean hasMoves = false;
@@ -312,9 +313,10 @@ void mouseClicked(){
             selectedPeg = -1;
             activePeg = -1;
             pTurn = !pTurn;
-            println("Turn ended.");
+            println("Turn ended.\n");
             if(players == 2){
-              println("/n"+names[pTurn?1:0]+"'s trun");
+              println(names[pTurn?0:1]+"'s turn");
+
             }
           }
           move(ind, ind, board, true); //convert to King
@@ -325,8 +327,8 @@ void mouseClicked(){
         }
       }
     }
-  }
   drawBoard();
+  }
 }
 
 void moveAI(int m, int n){
@@ -346,6 +348,7 @@ void moveAI(int m, int n){
       break;
     }
   }
+
 }
 
 String boardToLisp(){
@@ -360,18 +363,15 @@ String boardToLisp(){
 String getAIMove() throws IOException{
   
   String lispBoard = boardToLisp();
-  
-  Runtime rt = Runtime.getRuntime();
-  String[] cmd = {"clisp", "alphabeta.lsp", str(depth[pTurn?1:0]), lispBoard, (players==1 || !pTurn) ?"T":"Nil"};
+  String[] cmd = {"/usr/local/bin/clisp", "alphabeta.lsp", str(depth[pTurn?0:1]), lispBoard, (players==1 || !pTurn) ?"T":"Nil"};
   Process pr = rt.exec(cmd, null, new File(path));
-
   InputStream stdout = pr.getInputStream(); 
-
   Scanner scan = new Scanner(stdout);
   String ans = "";
   while(scan.hasNextLine()){
     ans = scan.nextLine();
-    //print(ans);
+    //println(ans);
+
   }
   scan.close();
  
@@ -388,7 +388,6 @@ void setup(){
   crown = createShape();
   crown.beginShape();
   crown.fill(C5[0], C5[1], C5[2]);
-  //s.noStroke();
   crown.vertex(0, 3);
   crown.vertex(0, 15);
   crown.vertex(20, 15);
@@ -398,52 +397,74 @@ void setup(){
   crown.vertex(5, 9);
   crown.endShape(CLOSE);
   
-  diagonals = makeDiag();
+  diagonals = makeDiag();             // fill board
   board = new int[32]; 
   for(int i = 0; i < 12; i++){
     board[i] = 1;
     board[31-i] = -1;
   }  
 
+  names[0] += players == 0 ? depth[0] + "000":"";
+  names[1] += players <= 1 ? depth[1] + "000":"";
+
   //board[9] = -1;  
   //board[30] = 0;
   
   drawBoard();
-  if(players == 2 || pTurn){
-    println(names[pTurn?1:0]+"'s trun");
+  if(players == 2 || (players == 1 &&pTurn)){
+    println(names[pTurn?0:1]+"'s turn");
   }
 }
 
-void draw(){  
-  if(gameOver()){ 
+void draw(){
+  if(gameOver()){
     noLoop();
-    println("\n\n\n=================\n+++++++++++++++++");
-    println("   "+(pTurn ? "RED ":"BLUE")+" WINS!!");
-    println("+++++++++++++++++\n=================");
+    String s ="";
+    int len = (pTurn ? names[1]:names[0]).length();
+    for(int i = 0; i < 36-len/2; i++){ //80 equals signs - len( wins!!!) = 36
+      s+=" ";
+    }
+    println("\n\n\n================================================================================\n     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    println(s+(pTurn ? names[1]:names[0])+" WINS!!!");
+    println("     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n================================================================================\n");
+    textSize(45);
+    textAlign(CENTER);
+    fill(255,220);
+    rect(0,150,400,50);
+    if(pTurn){
+      fill(C1[0],C1[1],C1[2]);
+    }
+    else{
+      fill(C2[0],C2[1],C2[2]);
+    }
+    text((pTurn ? names[1]:names[0])+" WINS!!!", width/2, height/2-8);
   }
-  else if(!pTurn && players == 1 || players == 0){
+  else if(!pTurn && players == 1 || players == 0){ // AI behavior
     try{
       if(AIprog == 0){
-        println("\n"+names[pTurn?1:0]+str(depth[pTurn?1:0])+"000 plays...  ");
+        println(names[pTurn?0:1]+" plays...  ");
+
         String m = getAIMove();
         AImoves = m.replace(".","").replace("  "," ").split(" ");
         AImoves[0] = AImoves[0].substring(1);
         AImoves[AImoves.length-1] = AImoves[AImoves.length-1].replace(")", "");
-        //println("");
-     }
-     moveAI(int(AImoves[AIprog]), int(AImoves[AIprog+1]));
-     AIprog++;
-     if(AImoves.length - AIprog ==1){
-       pTurn = !pTurn;
-       println("Trun ended.\n");
-       println(names[pTurn?1:0]+"'s trun");
-       AIprog = 0;
-     };
-     drawBoard();
-     delay(250);
-    }catch(IOException e){println(e);}  
+      }
+      moveAI(int(AImoves[AIprog]), int(AImoves[AIprog+1]));
+      AIprog++;
+      drawBoard();
+      if(AImoves.length - AIprog == 1){
+        pTurn = !pTurn;
+        println("Trun ended.\n");
+        if(players == 1)
+          println(names[pTurn?0:1]+"'s turn");
+        AIprog = 0;
+      }
+      delay(250);
+    }
+    catch(IOException e){println(e);}  
   }
 }
+
 
 int[][][] makeDiag(){
   int[][][] diagonal = new int[32][][];
@@ -934,101 +955,3 @@ int[][][] makeDiag(){
   diagonal[n][3] = i;
   return diagonal;
 }
-
-/*
-class Peg{ 
-  int pos;
-  boolean red;
-  boolean crown = false;
-  
-  Peg(int position, boolean red){
-    this.pos = position;
-    this.red = red;
-  }
-  
-  ArrayList getMoves(){
-    ArrayList<Integer> m = new ArrayList();
-    int y = this.pos / 4;
-    int x = this.pos%4;
-    int p;
-    if(this.crown){}
-    else{
-      
-      if(red){
-        if(y%2 == 0){
-          p = this.pos-4;
-          if(!occupied(p)){
-            m.add(p);
-          }
-          if(x != 3){
-            p = this.pos-3;
-            if(!occupied(p)){
-              m.add(p);
-            }
-        }
-        if(y%2 == 1 && x != 0){
-          p = this.pos-5;
-        }
-        
-        
-     }}
-    }
-    
-    
-    
-    return m;
-  }
-}
-
-void move(Peg p, int pos){
-  int y = p.pos/4;
-  int x = (p.pos%4)*2 + (y+1)%2;
-  fill(0,155,0);
-  rect(x*50,y*50,50,50);
-  p.pos = pos;
-  if(p.red){
-    if(p.pos < 4){
-      p.crown = true;
-    }
-  }else{
-    if(p.pos>=28){
-      p.crown = true;
-    }
-  }
-  
-  drawPeg(p);
-}
-
-boolean occupied(int pos){
-  for(int i = 0; i < 8; i++){
-    if(redP[i].pos == pos){
-      return true;
-    }
-    if(blackP[i].pos == pos){
-      return true;
-    }
-  }
-  return false;
-}
-
-int[] posToCoord(int pos){
-  int[] xy = {pos,};
-  return xy;
-}
-
-void drawPeg(Peg p){
-  int y = p.pos/4;
-  int x = (p.pos%4)*2 + (y+1)%2;
-  if(p.red){
-    fill(200,0,0);
-  }else{
-    fill(70);
-  }
-  ellipse(x*50+25, y*50+25,40,40);
-  ellipse(x*50+25, y*50+25,30,30);
-  
-  if(p.crown){
-    shape(crown, x*50+15, y*50-7);
-  }
-}
-*/
