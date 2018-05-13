@@ -1,0 +1,15 @@
+Presion,Urea,Gota,Hipotiroidismo,Tratamiento
+alta,alta,1,0,0
+alta,alta,1,1,0
+normal,alta,1,0,1
+baja,normal,1,0,1
+baja,baja,0,0,1
+baja,baja,0,1,0
+normal,baja,0,1,1
+alta,normal,1,0,0
+alta,baja,0,0,1
+baja,normal,0,0,1
+alta,normal,0,1,1
+normal,normal,1,1,1
+normal,alta,0,0,1
+baja,normal,1,1,0
