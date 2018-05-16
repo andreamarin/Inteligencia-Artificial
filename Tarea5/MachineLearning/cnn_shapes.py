@@ -129,7 +129,7 @@ def main(unused_argv):
         num_epochs=1,
         shuffle=False)
 
-    eval_results = shapes_classifier.evaluate(input_fn=test_input_fn)
+    eval_results = shapes-_classifier.evaluate(input_fn=test_input_fn)
     print(eval_results)
 
 if __name__ == "__main__":
